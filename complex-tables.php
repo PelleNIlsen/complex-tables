@@ -57,6 +57,6 @@ function generate_table_html_callback() {
     wp_die();
 }
 add_action('wp_ajax_generate_table_html', 'generate_table_html_callback');
-
+ 
 
 new Shortcode_Handler();
