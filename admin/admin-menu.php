@@ -54,7 +54,7 @@ class Admin_menu {
             }
 
             $table_name = sanitize_text_field($_POST['table_name']);
-            $table_data = stripslashes($_POST['table_data']);
+            $table_data = ($_POST['table_data']);
 
             if (empty($_POST['table_id'])) {
                 $table_id = create_new_complex_table($table_name, $table_data);
@@ -150,7 +150,7 @@ class Admin_menu {
         echo '<div class="wrap">';
         echo '<h1>Create/Edit Table</h1>';
 
-        echo '<form method="post" action="">';
+        echo '<form id="complex_tables_form" method="post" action="" enctype="multipart/form-data">';
         echo '<input type="hidden" name="table_id" value="' . esc_attr($table_id) . '">';
         wp_nonce_field('complex_tables_create_edit', 'complex_tables_nonce');
 
@@ -165,6 +165,18 @@ class Admin_menu {
         echo '<td><textarea name="table_data" id="table_data" rows="10" class="large-text code">' . esc_textarea($table_data) . '</textarea></td>';
         echo '</tr>';
         echo '<tr>';
+        echo '<th scope="row"><label for="csv_has_header">CSV has header row?</label></th>';
+        echo '<td><input type="checkbox" name="csv_has_header" id="csv_has_header"></td>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th scope="row"><label for="table_csv">Upload CSV</label></th>';
+        echo '<td><input type="file" name="table_csv" id="table_csv" accept=".csv"></td>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th scope="row"></th>';
+        echo '<td><button type="button" id="insert_csv_json" class="button">Insert CSV</button></td>';
+        echo '</tr>';
+        echo '<tr>';
         echo '<th scope="row"><Label for="table_css">Custom CSS</label></th>';
         echo '<td><textarea name="table_css" id="table_css" rows="5" cols="60">' . esc_textarea($table_css) . '</textarea></td>';
         echo '</tr>';
@@ -177,6 +189,8 @@ class Admin_menu {
         echo '</form>';
 
         echo '<script>
+                    var json_editor;
+
                     jQuery(document).ready(function($) {
                         var json_editor_settings = wp.codeEditor.defaultSettings ? _.clone(wp.codeEditor.defaultSettings) : {};
                         json_editor_settings.codemirror = _.extend({}, json_editor_settings.codemirror, {
@@ -191,61 +205,58 @@ class Admin_menu {
                             mode: "css",
                             lint: false
                         });
-                        var json_editor = wp.codeEditor.initialize($("#table_data"), json_editor_settings);
+                        json_editor = wp.codeEditor.initialize($("#table_data"), json_editor_settings);
                         var css_editor = wp.codeEditor.initialize($("#table_css"), css_editor_settings);
                     });
 
-                    //jQuery("#table_css").on("input", function() {
-                        //var style_tag_id = "live-preview-style";
-                        //var style_element = jQuery("#" + style_tag_id);
-                        //if (!style_element.length) {
-                            //jQuery("head").append("<style id=\'" + style_tag_id + "\'></style>");
-                            //style_element = jQuery("#" + style_tag_id);
-                        //}
-                        //style_element.text(jQuery(this).val());
-                    //});
+                    jQuery("#complex_tables_form").on("submit", function() {
+                        var tableDataTextarea = jQuery("#table_data");
+                        tableDataTextarea.val(json_editor.codemirror.getValue());
+                        tableDataTextarea[0].defaultValue = tableDataTextarea.val();
+                    });
+
+                    function handleCsvFileUpload(file) {
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            var csv = e.target.result;
+                            var json = csvToJson(csv, jQuery("#csv_has_header").is(":checked"));
+            
+                            json_editor.codemirror.setValue(json);
+                            jQuery("#table_data").val(json_editor.codemirror.getValue());
+                        };
+                        reader.readAsText(file);
+                    }
+
+                    jQuery("#insert_csv_json").on("click", function() {
+                        var fileInput = document.getElementById("table_csv");
+                        var file = fileInput.files[0];
+            
+                        if (file) {
+                            handleCsvFileUpload(file);
+                        } else {
+                            alert("Please upload a CSV file.");
+                        }
+                    });
+
+                    function csvToJson(csv, hasHeader) {
+                        var lines = csv.split("\n");
+                        var result = [];
+                        var headers = hasHeader ? lines.shift().split(",") : null;
+
+                        for (var i = 0; i < lines.length; i++) {
+                            var obj = {};
+                            var currentLine = lines[i].split(",");
+
+                            for (var j = 0; j < currentLine.length; j++) {
+                                obj[headers ? headers[j] : j] = currentLine[j];
+                            }
+
+                            result.push(obj);
+                        }
+
+                        return JSON.stringify(result);
+                    }
                 </script>';
-
-
-        //echo '<div class="preview-table">';
-       /* echo '<table class="table-live-preview">
-                <tr>
-                    <th>Company</th>
-                    <th>Contact</th>
-                    <th>Country</th>
-                </tr>
-                <tr>
-                    <td>Alfreds Futterkiste</td>
-                    <td>Maria Anders</td>
-                    <td>Germany</td>
-                </tr>
-                <tr>
-                    <td>Centro comercial Moctezuma</td>
-                    <td>Francisco Chang</td>
-                    <td>Mexico</td>
-                </tr>
-                <tr>
-                    <td>Ernst Handel</td>
-                    <td>Roland Mendel</td>
-                    <td>Austria</td>
-                </tr>
-                <tr>
-                    <td>Island Trading</td>
-                    <td>Helen Bennett</td>
-                    <td>UK</td>
-                </tr>
-                <tr>
-                    <td>Laughing Bacchus Winecellars</td>
-                    <td>Yoshi Tannamuri</td>
-                    <td>Canada</td>
-                </tr>
-                <tr>
-                    <td>Magazzini Alimentari Riuniti</td>
-                    <td>Giovanni Rovelli</td>
-                    <td>Italy</td>
-                </tr>
-            </table>';
-        echo '</div>'; */
 
         echo '</div>';
     }
