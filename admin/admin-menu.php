@@ -1,5 +1,7 @@
 <?php
 
+require_once plugin_dir_path(__FILE__) . 'class-wp-list-table.php';
+
 class Admin_menu {
     public function create_admin_menu() {
         add_menu_page(
@@ -91,45 +93,33 @@ class Admin_menu {
 
         if (isset($_GET['table_saved']) && $_GET['table_saved'] == '1') {
             echo '<div class="notice notice-success is-dismissible"><p>Table saved successfully!</p></div>';
+        } elseif (isset($_GET['table_deleted']) && $_GET['table_deleted'] == '1') {
+            echo '<div class="notice notice-success is-dismissible"><p>Table deleted successfully!</p></div>';
         }
 
         echo '<h1>Complex Tables</h1>';
         echo '<p>A plugin to create, store, and display complex tables via shortcodes.</p>';
         echo '<h2>Shortcodes</h2>';
 
-        // Fetch all tables
-        $tables = $this->get_all_tables();
+        $table_list = new Complex_Tables_List_Table();
+        $table_list->prepare_items();
 
-        if ($tables->have_posts()) {
-            echo '<table class="widefat">';
-            echo '<thead>';
-            echo '<tr>';
-            echo '<th>Table ID</th>';
-            echo '<th>Table Name</th>';
-            echo '<th>Shortcode</th>';
-            echo '<th>Actions</th>';
-            echo '</tr>';
-            echo '</thead>';
-            echo '<tbody>';
-
-            while ($tables->have_posts()) {
-                $tables->the_post();
-                $table_id = get_the_ID();
-                $table_name = get_the_title();
-
-                echo '<tr>';
-                echo '<td>' . $table_id . '</td>';
-                echo '<td>' . $table_name . '</td>';
-                echo '<td>[complex_table id="' . $table_id . '"]</td>';
-                echo '<td><a href="admin.php?page=complex-tables-create-edit&table_id=' . $table_id . '">Edit</a> | <a href="admin.php?page=complex-tables&table_id=' . $table_id . '&action=delete&complex_tables_nonce=' . wp_create_nonce('delete_table_' . $table_id) . '" onclick="return confirm(\'Are you sure you want to delete this table?\');">Delete</a></td>';
-                echo '</tr>';
-            }
-
-            echo '</tbody>';
-            echo '</table>';
-        } else {
-            echo '<p>No tables found.</p>';
-        }
+        ?>
+        <div class="wrap">
+            <h1 class="wp-heading-inline">Complex Tables</h1>
+            <a href="admin.php?page=complex-tables-create-edit" class="page-title-action">Add New</a>
+            <hr class="wp-header-end">
+            <form method="get">
+                <input type="hidden" name="page" value="complex-tables">
+                <?php $table_list->search_box('Search Tables', 'search_id'); ?>
+            </form>
+            <form method="post">
+                <?php
+                $table_list->display();
+                ?>
+            </form>
+        </div>
+        <?php
 
         echo '<p><a href="admin.php?page=complex-tables-create-edit" class="button button-primary">Create New Table</a></p>';
         echo '</div>';
