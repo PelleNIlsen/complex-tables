@@ -215,7 +215,7 @@ class Admin_menu {
 
         echo '<tr>';
         echo '<th scope="row"><Label>Pre-made Styles</label></th>';
-        echo '<td><button type="button" id="pre-made-style-1">Basic Gray</button> <button type="button" id="pre-made-style-2">Zebra Stripes</button> <button type="button" id="pre-made-style-3">Vertical Zebra Stripes</button> <button type="button" id="pre-made-style-4">Combined Zebra Stripes</button> <button type="button" id="pre-made-style-5">Dark Theme</button></td>';
+        echo '<td><button class="button" type="button" id="pre-made-style-1">Basic Gray</button> <button class="button" type="button" id="pre-made-style-2">Zebra Stripes</button> <button class="button" type="button" id="pre-made-style-3">Vertical Zebra Stripes</button> <button class="button" type="button" id="pre-made-style-4">Combined Zebra Stripes</button> <button class="button" type="button" id="pre-made-style-5">Dark Theme</button></td>';
         echo '</tr>';
 
         echo '</tbody>';
