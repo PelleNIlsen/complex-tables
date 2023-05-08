@@ -85,7 +85,9 @@ class Admin_menu {
                 update_complex_table($table_id, $table_name, $table_data);
             }
             $table_css = stripslashes($_POST['table_css']);
+            $table_class = sanitize_text_field($_POST['table_class']);
             update_post_meta($table_id, '_complex_tables_custom_css', $table_css);
+            update_post_meta($table_id, '_complex_tables_class', $table_class);
 
             wp_redirect('admin.php?page=complex-tables&table_saved=1');
             exit;
@@ -202,6 +204,11 @@ class Admin_menu {
         echo '</td>';
         
         echo '<tr>';
+        echo '<th scope="row"><Label for="table_class">Table Class</label></th>';
+        echo '<td><input type="text" name="table_class" id="table_class" value="' . esc_attr(isset($table_meta['_complex_tables_class'][0]) ? $table_meta['_complex_tables_class'][0] : '') . '" class="regular-text"></td>';
+        echo '</tr>';
+        
+        echo '<tr>';
         echo '<th scope="row"><Label for="table_css">Custom CSS</label></th>';
         echo '<td><textarea name="table_css" id="table_css" rows="5" cols="60">' . esc_textarea($table_css) . '</textarea></td>';
         echo '</tr>';
@@ -246,6 +253,15 @@ class Admin_menu {
                         var tableDataTextarea = jQuery("#table_data");
                         tableDataTextarea.val(json_editor.codemirror.getValue());
                         tableDataTextarea[0].defaultValue = tableDataTextarea.val();
+
+                        var tableClass = jQuery("#table_class").val();
+                        var cssTextarea = jQuery("#table_css");
+                        var cssContent = css_editor.codemirror.getValue();
+                        if (tableClass) {
+                            cssContent = "." + tableClass + " {" + cssContent + "}";
+                        }
+                        cssTextarea.val(cssContent);
+                        cssTextarea[0].defaultValue = cssTextarea.val();
                     });
 
                     function handleCsvFileUpload(file) {

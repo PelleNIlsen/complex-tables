@@ -26,18 +26,19 @@ class Shortcode_Handler {
 
         $table_data = $table->post_content;
         $table_css = get_post_meta($table_id, '_complex_tables_custom_css', true);
+        $table_class = get_post_meta($table_id, '_complex_tables_class', true);
 
-        $output = $this->generate_table_html($table_data, $table_css);
+        $output = $this->generate_table_html($table_data, $table_css, $table_class);
 
         return $output;
     }
 
-    public function generate_table_html($table_data, $table_css = '') {
+    public function generate_table_html($table_data, $table_css = '', $table_class = '') {
         $json_data = json_decode($table_data, true);
         $headers = array_keys($json_data[0]);
 
         $output = '<style scoped>' . $table_css . '</style>';
-        $output .= '<table class="complex-table-preview">';
+        $output .= '<table class="complex-table ' . esc_attr($table_class) . '">';
         $output .= '<tr>';
         foreach ($headers as $header) {
             $output .= '<th>';
