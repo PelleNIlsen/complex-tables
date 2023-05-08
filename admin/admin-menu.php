@@ -161,15 +161,18 @@ class Admin_menu {
         wp_nonce_field('complex_tables_create_edit', 'complex_tables_nonce');
 
         echo '<table class="form-table">';
-        echo '<tbody>';
+        echo '<tbody>'
+        ;
         echo '<tr>';
         echo '<th scope="row"><Label for="table_name">Table Name</label></th>';
         echo '<td><input type="text" name="table_name" id="table_name" value="' . esc_attr($table_name) . '" class="regular-text"></td>';
         echo '</tr>';
+
         echo '<tr>';
         echo '<th scope="row"><Label for="table_data">Table Data (JSON)</label></th>';
         echo '<td><textarea name="table_data" id="table_data" rows="10" class="large-text code">' . esc_textarea($table_data) . '</textarea></td>';
         echo '</tr>';
+
         echo '<tr>';
         echo '<th scope="row">Upload CSV</th>';
         echo '<td>';
@@ -185,10 +188,24 @@ class Admin_menu {
         echo '</div>';
         echo '</td>';
         echo '</tr>';
+
+        echo '<th scope="row">Excel Data</th>';
+        echo '<td>';
+        echo '<div id="excel_accordion">';
+        echo '<h3>Excel Data</h3>';
+        echo '<div>';
+        echo '<p><label for="excel_data">Paste your data from Excel here:</label></p>';
+        echo '<textarea id="excel_data" rows="5" class="large-text"></textarea>';
+        echo '<p><button type="button" id="insert_excel_json" class="button">Insert Excel Data</button></p>';
+        echo '</div>';
+        echo '</div>';
+        echo '</td>';
+        
         echo '<tr>';
         echo '<th scope="row"><Label for="table_css">Custom CSS</label></th>';
         echo '<td><textarea name="table_css" id="table_css" rows="5" cols="60">' . esc_textarea($table_css) . '</textarea></td>';
         echo '</tr>';
+
         echo '</tbody>';
         echo '</table>';
 
@@ -218,7 +235,7 @@ class Admin_menu {
                         json_editor = wp.codeEditor.initialize($("#table_data"), json_editor_settings);
                         var css_editor = wp.codeEditor.initialize($("#table_css"), css_editor_settings);
 
-                        jQuery("#csv_accordion").accordion({
+                        jQuery("#csv_accordion, #excel_accordion").accordion({
                             heightStyle: "content",
                             collapsible: true,
                             active: false,
@@ -265,6 +282,37 @@ class Admin_menu {
 
                             for (var j = 0; j < currentLine.length; j++) {
                                 obj[headers ? headers[j] : j] = currentLine[j];
+                            }
+
+                            result.push(obj);
+                        }
+
+                        return JSON.stringify(result);
+                    }
+
+                    jQuery("#insert_excel_json").on("click", function() {
+                        var excelData = jQuery("#excel_data").val();
+
+                        if (excelData) {
+                            var json = excelToJson(excelData);
+                            json_editor.codemirror.setValue(json);
+                            jQuery("#table_data").val(json_editor.codemirror.getValue());
+                        } else {
+                            alert("Please enter Excel data into the textarea.");
+                        }
+                    });
+
+                    function excelToJson(excelData) {
+                        var lines = excelData.split("\n");
+                        var result = [];
+                        var headers = lines.shift().split("\t");
+
+                        for (var i = 0; i < lines.length; i++) {
+                            var obj = {};
+                            var currentLine = lines[i].split("\t");
+
+                            for (var j = 0; j < currentLine.length; j++) {
+                                obj[headers[j]] = currentLine[j];
                             }
 
                             result.push(obj);
