@@ -3,6 +3,15 @@
 require_once plugin_dir_path(__FILE__) . 'class-wp-list-table.php';
 
 class Admin_menu {
+    public function __construct() {
+        add_action('admin_init', [$this, 'handle_actions']);
+    }
+
+    public function handle_actions() {
+        $this->handle_form_submissions();
+        $this->handle_delete_action();
+    }
+
     public function create_admin_menu() {
         add_menu_page(
             'Complex Tables',
@@ -87,8 +96,6 @@ class Admin_menu {
     }
 
     function complex_tables_main_page() {
-        $this->handle_delete_action();
-
         echo '<div class="wrap">';
 
         if (isset($_GET['table_saved']) && $_GET['table_saved'] == '1') {
@@ -126,8 +133,6 @@ class Admin_menu {
     }
 
     function complex_tables_create_edit_page() {
-        $this->handle_form_submissions();
-
         $table_id = isset($_GET['table_id']) ? intval($_GET['table_id']) : null;
         $table = $table_id ? get_post($table_id) : null;
 
