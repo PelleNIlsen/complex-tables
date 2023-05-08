@@ -5,11 +5,22 @@ require_once plugin_dir_path(__FILE__) . 'class-wp-list-table.php';
 class Admin_menu {
     public function __construct() {
         add_action('admin_init', [$this, 'handle_actions']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts_and_styles']);
     }
 
     public function handle_actions() {
         $this->handle_form_submissions();
         $this->handle_delete_action();
+    }
+
+    public function enqueue_scripts_and_styles($hook) {
+        if ($hook !== 'toplevel_page_complex_tables') {
+            return;
+        }
+
+        wp_enqueue_script('jquery-ui');
+        wp_enqueue_script('jquery-ui-accordion');
+        wp_enqueue_style('wp-jquery-ui-dialog');
     }
 
     public function create_admin_menu() {
@@ -160,16 +171,19 @@ class Admin_menu {
         echo '<td><textarea name="table_data" id="table_data" rows="10" class="large-text code">' . esc_textarea($table_data) . '</textarea></td>';
         echo '</tr>';
         echo '<tr>';
-        echo '<th scope="row"><label for="csv_has_header">CSV has header row?</label></th>';
-        echo '<td><input type="checkbox" name="csv_has_header" id="csv_has_header"></td>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th scope="row"><label for="table_csv">Upload CSV</label></th>';
-        echo '<td><input type="file" name="table_csv" id="table_csv" accept=".csv"></td>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th scope="row"></th>';
-        echo '<td><button type="button" id="insert_csv_json" class="button">Insert CSV</button></td>';
+        echo '<th scope="row">Upload CSV</th>';
+        echo '<td>';
+        echo '<div id="csv_accordion">';
+        echo '<h3>Upload CSV</h3>';
+        echo '<div>';
+        echo '<p><label for="csv_has_header">CSV has header row?</label>';
+        echo '<input type="checkbox" name="csv_has_header" id="csv_has_header"></p>';
+        echo '<p><label for="table_csv">Upload CSV</label>';
+        echo '<input type="file" name="table_csv" id="table_csv" accept=".csv"></p>';
+        echo '<p><button type="button" id="insert_csv_json" class="button">Insert CSV</button></p>';
+        echo '</div>';
+        echo '</div>';
+        echo '</td>';
         echo '</tr>';
         echo '<tr>';
         echo '<th scope="row"><Label for="table_css">Custom CSS</label></th>';
@@ -182,7 +196,8 @@ class Admin_menu {
         echo '<input type="submit" name="complex_tables_submit" id="submit" class="button button-primary" value="Save Table">';
         echo '</p>';
         echo '</form>';
-
+        echo '<script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>';
+        echo '<link rel="stylesheet" href="http://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">';
         echo '<script>
                     var json_editor;
 
@@ -202,6 +217,12 @@ class Admin_menu {
                         });
                         json_editor = wp.codeEditor.initialize($("#table_data"), json_editor_settings);
                         var css_editor = wp.codeEditor.initialize($("#table_css"), css_editor_settings);
+
+                        jQuery("#csv_accordion").accordion({
+                            heightStyle: "content",
+                            collapsible: true,
+                            active: false,
+                        });
                     });
 
                     jQuery("#complex_tables_form").on("submit", function() {
