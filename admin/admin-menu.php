@@ -213,6 +213,11 @@ class Admin_menu {
         echo '<td><textarea name="table_css" id="table_css" rows="5" cols="60">' . esc_textarea($table_css) . '</textarea></td>';
         echo '</tr>';
 
+        echo '<tr>';
+        echo '<th scope="row"><Label>Pre-made Styles</label></th>';
+        echo '<td><button type="button" id="pre-made-style-1">Basic Gray</button> <button type="button" id="pre-made-style-2">Zebra Stripes</button> <button type="button" id="pre-made-style-3">Vertical Zebra Stripes</button> <button type="button" id="pre-made-style-4">Combined Zebra Stripes</button> <button type="button" id="pre-made-style-5">Dark Theme</button></td>';
+        echo '</tr>';
+
         echo '</tbody>';
         echo '</table>';
 
@@ -224,6 +229,7 @@ class Admin_menu {
         echo '<link rel="stylesheet" href="http://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">';
         echo '<script>
                     var json_editor;
+                    var css_editor;
 
                     jQuery(document).ready(function($) {
                         var json_editor_settings = wp.codeEditor.defaultSettings ? _.clone(wp.codeEditor.defaultSettings) : {};
@@ -240,7 +246,7 @@ class Admin_menu {
                             lint: false
                         });
                         json_editor = wp.codeEditor.initialize($("#table_data"), json_editor_settings);
-                        var css_editor = wp.codeEditor.initialize($("#table_css"), css_editor_settings);
+                        css_editor = wp.codeEditor.initialize($("#table_css"), css_editor_settings);
 
                         jQuery("#csv_accordion, #excel_accordion").accordion({
                             heightStyle: "content",
@@ -336,6 +342,121 @@ class Admin_menu {
 
                         return JSON.stringify(result);
                     }
+
+                    const preMadeStyles = [
+`/* Pre-made style - Basic Gray */
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+  
+table td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+  
+table tr:nth-child(even) {
+    background-color: #dddddd;
+}`,
+`/* Pre-made style - Zebra Stripes */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+  
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+  
+tr:nth-child(even) {
+    background-color: #D6EEEE;
+}`,
+`/* Pre-made style - Vertical Zebra Stripes */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table th, td {
+    text-align: left;
+    padding: 8px;
+}
+  
+table th:nth-child(even),td:nth-child(even) {
+    background-color: #D6EEEE;
+}`,
+`/* Pre-made style - Combined Zebra Stripes */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+table tr:nth-child(even) {
+    background-color: rgba(150, 212, 212, 0.4);
+}
+  
+table th:nth-child(even),td:nth-child(even) {
+    background-color: rgba(150, 212, 212, 0.4);
+}`,
+`/* Pre-made style - Dark Theme */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    color: #f0f0f0;
+    text-align: left;
+}
+
+table th {
+    background-color: #333;
+    padding: 12px;
+    border: 1px solid #444;
+}
+
+table td {
+    padding: 8px;
+    background-color: #222;
+    border: 1px solid #444;
+}
+
+table tr:hover {
+    cursor: pointer;
+}`,
+                    ];
+            
+                    document.getElementById("pre-made-style-1").addEventListener("click", () => {
+                        css_editor.codemirror.setValue(preMadeStyles[0]);
+                        jQuery("#table_css").val(css_editor.codemirror.getValue());
+                    });
+                    
+                    document.getElementById("pre-made-style-2").addEventListener("click", () => {
+                        css_editor.codemirror.setValue(preMadeStyles[1]);
+                        jQuery("#table_css").val(css_editor.codemirror.getValue());
+                    });
+
+                    document.getElementById("pre-made-style-3").addEventListener("click", () => {
+                        css_editor.codemirror.setValue(preMadeStyles[2]);
+                        jQuery("#table_css").val(css_editor.codemirror.getValue());
+                    });
+                    
+                    document.getElementById("pre-made-style-4").addEventListener("click", () => {
+                        css_editor.codemirror.setValue(preMadeStyles[3]);
+                        jQuery("#table_css").val(css_editor.codemirror.getValue());
+                    });
+
+                    document.getElementById("pre-made-style-5").addEventListener("click", () => {
+                        css_editor.codemirror.setValue(preMadeStyles[4]);
+                        jQuery("#table_css").val(css_editor.codemirror.getValue());
+                    });
+                      
                 </script>';
 
         echo '</div>';

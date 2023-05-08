@@ -39,13 +39,13 @@ class Shortcode_Handler {
 
         $output = '<style scoped>' . $table_css . '</style>';
         $output .= '<table class="complex-table ' . esc_attr($table_class) . '">';
-        $output .= '<tr>';
+        $output .= '<thead><tr>';
         foreach ($headers as $header) {
             $output .= '<th>';
             $output .= htmlspecialchars($header);
             $output .= '</th>';
         }
-        $output .= '</tr>';
+        $output .= '</thead></tr><tbody>';
         foreach ($json_data as $row) {
             $output .= '<tr>';
             foreach ($row as $cell) {
@@ -55,7 +55,7 @@ class Shortcode_Handler {
             }
             $output .= '</tr>';
         }
-        $output .= '</table>';
+        $output .= '</tbody></table>';
 
         return $output;
     }
