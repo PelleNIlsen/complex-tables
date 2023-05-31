@@ -383,7 +383,7 @@ class Admin_menu {
                             result.push(obj);
                         }
 
-                        return JSON.stringify(result);
+                        return JSON.stringify(result, null, "\t");
                     }
 
                     jQuery("#insert_excel_json").on("click", function() {
@@ -414,7 +414,7 @@ class Admin_menu {
                             result.push(obj);
                         }
 
-                        return JSON.stringify(result);
+                        return JSON.stringify(result, null, "\t");
                     }
 
                     const preMadeStyles = [
