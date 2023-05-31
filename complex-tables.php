@@ -14,6 +14,13 @@ include 'admin/admin-menu.php';
 include 'admin/custom-post-type.php';
 include 'shortcode-handler.php';
 
+/**
+ * Registers and initializes the Complex Tables plugin's custom post type and admin menu.
+ * 
+ * @since 1.0.0
+ * 
+ * @return void
+ */
 function complex_tables_admin() {
     $admin_menu = new Admin_menu();
     add_action( 'admin_menu', [$admin_menu, 'create_admin_menu'] );
@@ -23,6 +30,17 @@ function complex_tables_admin() {
 }
 add_action( 'plugins_loaded', 'complex_tables_admin' );
 
+/**
+ * Updates and existing post in the WordPress database with the specified table ID, name, and data.
+ * 
+ * @since 1.0.0
+ * 
+ * @param int $table_id         The ID of the post containing the table tp update.
+ * @param string $table_name    The new name for the table.
+ * @param string $table_data    The new data for the table
+ * 
+ * @return void
+ */
 function update_complex_table($table_id, $table_name, $table_data) {
     $table_post = [
         'ID'            => $table_id,
@@ -33,6 +51,16 @@ function update_complex_table($table_id, $table_name, $table_data) {
     wp_update_post($table_post);
 }
 
+/**
+ * Creates a new custom post in the WordPress database with the specified name and data, of post type 'complex_table'
+ * 
+ * @since 1.0.0
+ * 
+ * @param string $table_name    The name for the new table
+ * @param string $table_data    The data for the new table
+ * 
+ * @return int|WP_Error         The ID of the newly created post on success, or a WP_Error object on failure.
+ */
 function create_new_complex_table($table_name, $table_data) {
     $table_post = [
         'post_title'    => $table_name,
@@ -45,6 +73,13 @@ function create_new_complex_table($table_name, $table_data) {
     return $table_id;
 }
 
+/**
+ * Callback function for the AJAX request to generate HTML for a table shortcode.
+ * 
+ * @since 1.0.0
+ * 
+ * @return void
+ */
 function generate_table_html_callback() {
     check_ajax_referer('generate_table_html', 'security');
 

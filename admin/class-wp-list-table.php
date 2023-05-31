@@ -5,6 +5,14 @@ if (!class_exists('WP_List_Table')) {
 }
 
 class Complex_Tables_List_Table extends WP_List_Table {
+    /**
+     * Constructs a new custom post type for 'table' with its corresponding singular and
+     * plural names.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
     public function __construct() {
         parent::__construct([
             'singular'  => 'table',
@@ -13,6 +21,14 @@ class Complex_Tables_List_Table extends WP_List_Table {
         ]);
     }
 
+    /**
+     * Returns an array of column names for the 'table' custom post type table in the
+     * WordPress admin panel.
+     * 
+     * @since 1.0.0
+     * 
+     * @return array    An array of column names along with their human-readable labels.
+     */
     public function get_columns() {
         return [
             'table_id'      => 'Table ID',
@@ -22,6 +38,14 @@ class Complex_Tables_List_Table extends WP_List_Table {
         ];
     }
 
+    /**
+     * Prepares the table data for display in the WordPress admin panel by querying the 'complex_table'
+     * custom post type and setting up pagination.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
     public function prepare_items() {
         $columns = $this->get_columns();
         $this->_column_headers = [$columns, [], []];
@@ -55,6 +79,17 @@ class Complex_Tables_List_Table extends WP_List_Table {
         ]);
     }
 
+    /**
+     * Handles the default output for each column in the 'table' custom post type table in
+     * the WordPress admin panel.
+     * 
+     * @since 1.0.0
+     * 
+     * @param object $item          The Current 'table' custom post type object being displayed.
+     * @param string $column_name   The name of the current column being displayed.
+     * 
+     * @return string               The HTML output for the current column of the current 'table' custom post type object.
+     */
     public function column_default($item, $column_name) {
         switch ($column_name) {
             case 'table_id':

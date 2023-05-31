@@ -1,6 +1,13 @@
 <?php
 
 class Custom_post_type {
+    /**
+     * Registers the 'complex_table' custom post type for the plugin.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
     public function create_post_type() {
         $labels = [
             'name'                  => _x('Complex Tables', 'post type general name', 'complex-tables'),

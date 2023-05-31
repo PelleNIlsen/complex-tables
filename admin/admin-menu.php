@@ -3,16 +3,39 @@
 require_once plugin_dir_path(__FILE__) . 'class-wp-list-table.php';
 
 class Admin_menu {
+    /**
+     * Registers the plugin's actions and scripts for the WordPress admin area.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
     public function __construct() {
         add_action('admin_init', [$this, 'handle_actions']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts_and_styles']);
     }
 
+    /**
+     * Handles form submissions and delete actions for the plugin.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
     public function handle_actions() {
         $this->handle_form_submissions();
         $this->handle_delete_action();
     }
 
+    /**
+     * Enqueues the necessary scripts and styles for the plugin's admin page.
+     * 
+     * @since 1.0.0
+     * 
+     * @param string $hook  The current admin page hook.
+     * 
+     * @return void
+     */
     public function enqueue_scripts_and_styles($hook) {
         if ($hook !== 'toplevel_page_complex_tables') {
             return;
@@ -23,6 +46,13 @@ class Admin_menu {
         wp_enqueue_style('wp-jquery-ui-dialog');
     }
 
+    /**
+     * Created the plugin's admin menu and two submenus and enqueues necessary assets for the plugin's pages.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
     public function create_admin_menu() {
         add_menu_page(
             'Complex Tables',
@@ -46,6 +76,13 @@ class Admin_menu {
         add_action('admin_enqueue_scripts', [$this, 'enqueue_codemirror_assets']);
     }
 
+    /**
+     * Retrieves all published complex tables from the database.
+     * 
+     * @since 1.0.0
+     * 
+     * @return WP_Query     A WP_Query object containing all published complex tables.
+     */
     private function get_all_tables() {
         $args = [
             'post_type'         => 'complex_table',
@@ -59,6 +96,13 @@ class Admin_menu {
         return $tables;
     }
 
+    /**
+     * Enqueues necessary CodeMirror assets for the plugin's "Create/Edit Table" page.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
     public function enqueue_codemirror_assets() {
         $screen = get_current_screen();
         if (strpos($screen->base, 'complex-tables-create-edit') === false) {
@@ -69,6 +113,13 @@ class Admin_menu {
         wp_enqueue_style('wp-codemirror');
     }
 
+    /**
+     * Handles form submissions for creating/editing complex tables.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
     private function handle_form_submissions() {
         if (isset($_POST['complex_tables_submit'])) {
             if (!wp_verify_nonce($_POST['complex_tables_nonce'], 'complex_tables_create_edit')) {
@@ -94,6 +145,13 @@ class Admin_menu {
         }
     }
 
+    /**
+     * Handles the delete action for complex tables.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
     private function handle_delete_action() {
         if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['table_id'])) {
             $table_id = intval($_GET['table_id']);
@@ -108,6 +166,13 @@ class Admin_menu {
         }
     }
 
+    /**
+     * Displays the main page for the Complex Tables plugin, including a list of tables and shortcodes.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
     function complex_tables_main_page() {
         echo '<div class="wrap">';
 
@@ -145,6 +210,13 @@ class Admin_menu {
         echo '</div>';
     }
 
+    /**
+     * Displays the "Create/Edit Table" page for the Complex Tables plugin, allowing users to create or edit tables.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
     function complex_tables_create_edit_page() {
         $table_id = isset($_GET['table_id']) ? intval($_GET['table_id']) : null;
         $table = $table_id ? get_post($table_id) : null;

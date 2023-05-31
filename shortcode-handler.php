@@ -1,10 +1,26 @@
 <?php
 
 class Shortcode_Handler {
+    /**
+     * Constructor function for the Complex Tables plugin shortcode handler.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
     public function __construct() {
         add_shortcode('complex_table', array($this, 'display_complex_table'));
     }
 
+    /**
+     * Generated HTML for displaying a complex table based on the specified shortcode attributes.
+     * 
+     * @since 1.0.0
+     * 
+     * @param array $atts   An array of shortcode attributes.
+     * 
+     * @return string       The HTML for displaying the complex table.
+     */
     public function display_complex_table($atts) {
         $atts = shortcode_atts(
             array(
@@ -33,6 +49,17 @@ class Shortcode_Handler {
         return $output;
     }
 
+    /**
+     * Generates HTML for displaying a complex table based on the specified data and optional CSS and class attributes.
+     * 
+     * @since 1.0.0
+     * 
+     * @param string $table_data    The JSON-encoded data representing the table.
+     * @param string $table_css     (Optional) The custom CSS to apply to the table.
+     * @param string $table_class   (Optional) The CSS class to apply to the table.
+     * 
+     * @return string               The HTML for displaying the complex table.
+     */
     public function generate_table_html($table_data, $table_css = '', $table_class = '') {
         $json_data = json_decode($table_data, true);
         $headers = array_keys($json_data[0]);
