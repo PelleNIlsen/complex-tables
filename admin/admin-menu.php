@@ -121,28 +121,30 @@ class Admin_menu {
      * @return void
      */
     private function handle_form_submissions() {
-        if (isset($_POST['complex_tables_submit'])) {
-            if (!wp_verify_nonce($_POST['complex_tables_nonce'], 'complex_tables_create_edit')) {
-                die(__('Security check failed', 'complex-tables'));
-            }
-
-            $table_name = sanitize_text_field($_POST['table_name']);
-            $table_data = ($_POST['table_data']);
-
-            if (empty($_POST['table_id'])) {
-                $table_id = create_new_complex_table($table_name, $table_data);
-            } else {
-                $table_id = intval($_POST['table_id']);
-                update_complex_table($table_id, $table_name, $table_data);
-            }
-            $table_css = stripslashes($_POST['table_css']);
-            $table_class = sanitize_text_field($_POST['table_class']);
-            update_post_meta($table_id, '_complex_tables_custom_css', $table_css);
-            update_post_meta($table_id, '_complex_tables_class', $table_class);
-
-            wp_redirect('admin.php?page=complex-tables&table_saved=1');
-            exit;
+        if (!isset($_POST['complex_tables_submit'])) {
+            return;
         }
+
+        $nonce = $_POST['complex_tables_nonce'];
+        if (!wp_verify_nonce($nonce, 'complex_tables_create_edit')) {
+            die(__('Security check failed', 'complex_tables'));
+        }
+
+        $table_name = sanitize_text_field($_POST['table_name']);
+        $table_data = ($_POST['table_data']);
+        if (empty($_POST['table_id'])) {
+            $table_id = create_new_complex_table($table_name, $table_data);
+        } else {
+            $table_id = (int) $_POST['table_id'];
+            update_complex_table($table_id, $table_name, $table_data);
+        }
+
+        $table_css = wp_unslash($_POST['table_css']);
+        $table_class = sanitize_text_field($_POST['table_class']);
+        update_post_meta($table_id, '_complex_tables_custom_css', $table_css);
+        update_post_meta($table_id, '_complex_tables_class', $table_class);
+        wp_safe_redirect('admin.php?page=complex-tables&table_saved=1');
+        exit();
     }
 
     /**
