@@ -82,7 +82,7 @@ Here is the link to the repository: [PelleNIlsen/complex-tables: A WordPress Plu
 
 ## License
 
-This plugn is licensed under the GNU General Public License. This ensures that end users have the freedom to use, study, share (copy), and modify the software.
+This project is licensed under the terms of the GNU General Public License v2.0 or later.
 
 
 ## Credits
