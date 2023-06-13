@@ -9,7 +9,7 @@ class Shortcode_Handler {
      * @return void
      */
     public function __construct() {
-        add_shortcode('complex_table', array($this, 'display_complex_table'));
+        add_shortcode('complex_table', [$this, 'display_complex_table']);
     }
 
     /**
@@ -23,9 +23,9 @@ class Shortcode_Handler {
      */
     public function display_complex_table($atts) {
         $atts = shortcode_atts(
-            array(
+            [
                 'id' => 0
-            ),
+            ],
             $atts,
             'complex_table'
         );
