@@ -176,7 +176,20 @@ class Admin_menu {
      * @return void
      */
     function complex_tables_main_page() {
+        $host = parse_url(home_url(), PHP_URL_HOST);
+        $is_local = in_array($host, ['localhost', '127.0.0.1']);
+
         echo '<div class="wrap">';
+
+        if (isset($_POST['submit_complex_table_feedback'])) {
+            $feedback = sanitize_textarea_field($_POST['complex_table_feedback']);
+            if(wp_mail('pellemnilsen@gmail.com', 'Plugin Feedback - Complex Tables', $feedback)) {
+                echo '<div class="notice notice-success is-dismissible"><p>Feedback sent successfully!</p></div>';
+            } else {
+                echo '<div class="notice notice-error is-dismissible"><p>Sorry, something went wrong. Please try again later.</p></div>';
+            }
+            // return;
+        }
 
         if (isset($_GET['table_saved']) && $_GET['table_saved'] == '1') {
             echo '<div class="notice notice-success is-dismissible"><p>Table saved successfully!</p></div>';
@@ -186,6 +199,21 @@ class Admin_menu {
 
         echo '<h1>Complex Tables</h1>';
         echo '<p>A plugin to create, store, and display complex tables via shortcodes.</p>';
+
+        echo '
+        <form method="post" class="feedbacl-form">
+            <h2>Send Feedback</h2>
+            <label for="complex_table_feedback">Let me know what you think:</label><br>
+            <textarea name="complex_table_feedback" id="complex_table_feedback" rows="5" class="widefat"></textarea>
+            <input type="submit" name="submit_complex_table_feedback" value="Submit" class="button button-primary">
+        </form>
+        <p class="description">If the form doesn\'t work for various reasons, you can reach me at pellemnilsen@gmail.com</p>
+        ';
+
+        if ($is_local) {
+            echo '<p class="description">Note: Your WordPress installation is hosted on a local server. You can reach me at pellemnilsen@gmail.com</p>';
+        }
+
         echo '<h2>Shortcodes</h2>';
 
         $table_list = new Complex_Tables_List_Table();
