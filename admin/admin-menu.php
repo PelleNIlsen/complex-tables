@@ -200,15 +200,28 @@ class Admin_menu {
         echo '<h1>Complex Tables</h1>';
         echo '<p>A plugin to create, store, and display complex tables via shortcodes.</p>';
 
-        echo '
-        <form method="post" class="feedbacl-form">
-            <h2>Send Feedback</h2>
-            <label for="complex_table_feedback">Let me know what you think:</label><br>
-            <textarea name="complex_table_feedback" id="complex_table_feedback" rows="5" class="widefat"></textarea>
-            <input type="submit" name="submit_complex_table_feedback" value="Submit" class="button button-primary">
-        </form>
+        echo '<div id="feedback_accordion">';
+        echo '<h3>Send Feedback</h3>';
+        echo '<form method="post" class="feedbacl-form">
+        <h2>Send Feedback</h2>
+        <label for="complex_table_feedback">Let me know what you think:</label><br>
+        <textarea name="complex_table_feedback" id="complex_table_feedback" rows="5" class="widefat"></textarea>
+        <input type="submit" name="submit_complex_table_feedback" value="Submit" class="button button-primary">
         <p class="description">If the form doesn\'t work for various reasons, you can reach me at pellemnilsen@gmail.com</p>
-        ';
+    </form>';
+        echo '</div>';
+
+        echo '<script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>';
+        echo '<link rel="stylesheet" href="http://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">';
+        echo '<script>
+        jQuery(document).ready(function($) {
+            jQuery("#feedback_accordion").accordion({
+                heightStyle: "content",
+                collapsible: true,
+                active: false,
+            });
+        });
+        </script>';
 
         if ($is_local) {
             echo '<p class="description">Note: Your WordPress installation is hosted on a local server. You can reach me at pellemnilsen@gmail.com</p>';
