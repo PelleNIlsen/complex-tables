@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Complex Tables
- * Plugin URI: https://blisynlig.com
+ * Plugin URI: https://github.com/PelleNIlsen/complex-tables/blob/main/readme.md
  * Description: A plugin to create, store ,and display complex tables via shortcodes.
  * Version: 1.0.0
  * Author: Pelle Nilsen
