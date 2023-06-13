@@ -69,7 +69,7 @@ class Shortcode_Handler {
         $output .= '<thead><tr>';
         foreach ($headers as $header) {
             $output .= '<th>';
-            $output .= htmlspecialchars($header);
+            $output .= esc_html($header);
             $output .= '</th>';
         }
         $output .= '</thead></tr><tbody>';
@@ -77,7 +77,7 @@ class Shortcode_Handler {
             $output .= '<tr>';
             foreach ($row as $cell) {
                 $output .= '<td>';
-                $output .= htmlspecialchars($cell);
+                $output .= esc_html($cell);
                 $output .= '</td>';
             }
             $output .= '</tr>';
