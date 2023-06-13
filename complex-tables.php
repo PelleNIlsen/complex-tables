@@ -5,7 +5,7 @@
  * Description: A plugin to create, store ,and display complex tables via shortcodes.
  * Version: 1.0.0
  * Author: Pelle Nilsen
- * Author URI: https://blisynlig.com
+ * Author URI: https://github.com/PelleNIlsen
  * License: GPLv2 or later
  * Text Domain: complex-tables
  */
