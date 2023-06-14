@@ -64,6 +64,8 @@ class Shortcode_Handler {
         $json_data = json_decode($table_data, true);
         $headers = array_keys($json_data[0]);
 
+        $table_css = preg_replace( '/<.*?>|<|>/', '', $table_css );
+
         $output = '<style scoped>' . $table_css . '</style>';
         $output .= '<table class="complex-table ' . esc_attr($table_class) . '">';
         $output .= '<thead><tr>';
