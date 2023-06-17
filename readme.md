@@ -77,7 +77,7 @@ Coming
 
 If you would like to contribute to the development of this plugin, feel free to do so on my GitHub repository. Your contributions can be in the form of bug reports, feature requests, or direct contributions to the code. Make sure to read through the existing issues and pull requests to ensure that your issue/request is not a duplicate.
 
-Here is the link to the repository: [PelleNIlsen/complex-tables: A WordPress Plugin for creating and managing HTML tables with shortcodes. (github.com)](https://github.com/PelleNIlsen/complex-tables)
+Here is the link to the repository: [PelleNilsen/complex-tables: A WordPress Plugin for creating and managing HTML tables with shortcodes. (github.com)](https://github.com/PelleNIlsen/complex-tables)
 
 
 ## License
