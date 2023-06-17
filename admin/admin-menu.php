@@ -11,8 +11,8 @@ class Admin_menu {
      * @return void
      */
     public function __construct() {
-        add_action('admin_init', [$this, 'handle_actions']);
-        add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts_and_styles']);
+        add_action( 'admin_init', [ $this, 'handle_actions' ] );
+        add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts_and_styles' ] );
     }
 
     /**
@@ -37,13 +37,13 @@ class Admin_menu {
      * @return void
      */
     public function enqueue_scripts_and_styles($hook) {
-        if ($hook !== 'toplevel_page_complex_tables') {
+        if ( $hook !== 'toplevel_page_complex_tables' ) {
             return;
         }
 
-        wp_enqueue_script('jquery-ui');
-        wp_enqueue_script('jquery-ui-accordion');
-        wp_enqueue_style('wp-jquery-ui-dialog');
+        wp_enqueue_script( 'jquery-ui' );
+        wp_enqueue_script( 'jquery-ui-accordion' );
+        wp_enqueue_style( 'wp-jquery-ui-dialog' );
     }
 
     /**
@@ -59,7 +59,7 @@ class Admin_menu {
             'Complex Tables',
             'manage_options',
             'complex-tables',
-            [$this, 'complex_tables_main_page'],
+            [ $this, 'complex_tables_main_page' ],
             'dashicons-editor-table',
             25
         );
@@ -70,10 +70,10 @@ class Admin_menu {
             'Create/Edit Table',
             'manage_options',
             'complex-tables-create-edit',
-            [$this, 'complex_tables_create_edit_page']
+            [ $this, 'complex_tables_create_edit_page' ]
         );
 
-        add_action('admin_enqueue_scripts', [$this, 'enqueue_codemirror_assets']);
+        add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_codemirror_assets' ] );
     }
 
     /**
@@ -92,7 +92,7 @@ class Admin_menu {
             'order'             => 'ASC'
         ];
 
-        $tables = new WP_Query($args);
+        $tables = new WP_Query( $args );
         return $tables;
     }
 
@@ -105,12 +105,12 @@ class Admin_menu {
      */
     public function enqueue_codemirror_assets() {
         $screen = get_current_screen();
-        if (strpos($screen->base, 'complex-tables-create-edit') === false) {
+        if ( strpos( $screen->base, 'complex-tables-create-edit' ) === false ) {
             return;
         }
 
-        wp_enqueue_code_editor(['type' => 'application/json']);
-        wp_enqueue_style('wp-codemirror');
+        wp_enqueue_code_editor( [ 'type' => 'application/json' ] );
+        wp_enqueue_style( 'wp-codemirror' );
     }
 
     /**
@@ -121,30 +121,30 @@ class Admin_menu {
      * @return void
      */
     private function handle_form_submissions() {
-        if (!isset($_POST['complex_tables_submit'])) {
+        if ( !isset( $_POST[ 'complex_tables_submit' ] ) ) {
             return;
         }
 
-        $nonce = $_POST['complex_tables_nonce'];
-        if (!wp_verify_nonce($nonce, 'complex_tables_create_edit')) {
-            die(__('Security check failed', 'complex_tables'));
+        $nonce = $_POST[ 'complex_tables_nonce' ];
+        if ( !wp_verify_nonce( $nonce, 'complex_tables_create_edit' ) ) {
+            die( __( 'Security check failed', 'complex_tables' ) );
         }
 
-        $table_name = sanitize_text_field($_POST['table_name']);
-        $table_data = ($_POST['table_data']);
-        if (empty($_POST['table_id'])) {
-            $table_id = create_new_complex_table($table_name, $table_data);
+        $table_name = sanitize_text_field( $_POST[ 'table_name' ] );
+        $table_data = ( $_POST[ 'table_data' ] );
+        if ( empty( $_POST[ 'table_id' ] ) ) {
+            $table_id = create_new_complex_table( $table_name, $table_data );
         } else {
-            $table_id = (int) $_POST['table_id'];
-            update_complex_table($table_id, $table_name, $table_data);
+            $table_id = ( int ) $_POST[ 'table_id' ];
+            update_complex_table( $table_id, $table_name, $table_data );
         }
 
-        $table_css = wp_unslash($_POST['table_css']);
-        $table_class = sanitize_text_field($_POST['table_class']);
-        update_post_meta($table_id, '_complex_tables_custom_css', $table_css);
-        update_post_meta($table_id, '_complex_tables_class', $table_class);
-        wp_safe_redirect('admin.php?page=complex-tables&table_saved=1');
-        exit();
+        $table_css = wp_unslash( $_POST[ 'table_css' ] );
+        $table_class = sanitize_text_field( $_POST[ 'table_class' ] );
+        update_post_meta( $table_id, '_complex_tables_custom_css', $table_css );
+        update_post_meta( $table_id, '_complex_tables_class', $table_class );
+        wp_safe_redirect( 'admin.php?page=complex-tables&table_saved=1' );
+        exit(); 
     }
 
     /**
@@ -155,15 +155,15 @@ class Admin_menu {
      * @return void
      */
     private function handle_delete_action() {
-        if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['table_id'])) {
-            $table_id = intval($_GET['table_id']);
+        if ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'delete' && isset( $_GET[ 'table_id' ] ) ) {
+            $table_id = intval( $_GET[ 'table_id' ] );
 
-            if (!wp_verify_nonce($_GET['complex_tables_nonce'], 'delete_table_' . $table_id)) {
-                die(__('Security check failed', 'complex-tables'));
+            if ( !wp_verify_nonce( $_GET[ 'complex_tables_nonce' ], 'delete_table_' . $table_id ) ) {
+                die( __( 'Security check failed', 'complex-tables' ) );
             }
 
-            wp_delete_post($table_id, true);
-            wp_redirect('admin.php?page=complex-tables&table_deleted=1');
+            wp_delete_post( $table_id, true );
+            wp_redirect( 'admin.php?page=complex-tables&table_deleted=1' );
             exit;
         }
     }
@@ -176,24 +176,23 @@ class Admin_menu {
      * @return void
      */
     function complex_tables_main_page() {
-        $host = parse_url(home_url(), PHP_URL_HOST);
-        $is_local = in_array($host, ['localhost', '127.0.0.1']);
+        $host = parse_url( home_url(), PHP_URL_HOST );
+        $is_local = in_array( $host, [ 'localhost', '127.0.0.1' ] );
 
         echo '<div class="wrap">';
 
-        if (isset($_POST['submit_complex_table_feedback'])) {
-            $feedback = sanitize_textarea_field($_POST['complex_table_feedback']);
-            if(wp_mail('pellemnilsen@gmail.com', 'Plugin Feedback - Complex Tables', $feedback)) {
+        if ( isset( $_POST[ 'submit_complex_table_feedback' ] ) ) {
+            $feedback = sanitize_textarea_field( $_POST[ 'complex_table_feedback' ] );
+            if( wp_mail( 'pellemnilsen@gmail.com', 'Plugin Feedback - Complex Tables', $feedback ) ) {
                 echo '<div class="notice notice-success is-dismissible"><p>Feedback sent successfully!</p></div>';
             } else {
                 echo '<div class="notice notice-error is-dismissible"><p>Sorry, something went wrong. Please try again later.</p></div>';
             }
-            // return;
         }
 
-        if (isset($_GET['table_saved']) && $_GET['table_saved'] == '1') {
+        if ( isset( $_GET[ 'table_saved' ] ) && $_GET[ 'table_saved' ] == '1' ) {
             echo '<div class="notice notice-success is-dismissible"><p>Table saved successfully!</p></div>';
-        } elseif (isset($_GET['table_deleted']) && $_GET['table_deleted'] == '1') {
+        } elseif ( isset( $_GET[ 'table_deleted' ] ) && $_GET[ 'table_deleted' ] == '1' ) {
             echo '<div class="notice notice-success is-dismissible"><p>Table deleted successfully!</p></div>';
         }
 
@@ -223,7 +222,7 @@ class Admin_menu {
         });
         </script>';
 
-        if ($is_local) {
+        if ( $is_local ) {
             echo '<p class="description">Note: Your WordPress installation is hosted on a local server. You can reach me at pellemnilsen@gmail.com</p>';
         }
 
@@ -239,7 +238,7 @@ class Admin_menu {
             <hr class="wp-header-end">
             <form method="get">
                 <input type="hidden" name="page" value="complex-tables">
-                <?php $table_list->search_box('Search Tables', 'search_id'); ?>
+                <?php $table_list->search_box( 'Search Tables', 'search_id' ); ?>
             </form>
             <form method="post">
                 <?php
@@ -261,33 +260,33 @@ class Admin_menu {
      * @return void
      */
     function complex_tables_create_edit_page() {
-        $table_id = isset($_GET['table_id']) ? intval($_GET['table_id']) : null;
-        $table = $table_id ? get_post($table_id) : null;
+        $table_id = isset( $_GET[ 'table_id' ] ) ? intval( $_GET[ 'table_id' ] ) : null;
+        $table = $table_id ? get_post( $table_id ) : null;
 
         $table_name = $table ? $table->post_title : '';
         $table_data = $table ? $table->post_content : '';
 
-        $table_meta = $table_id ? get_post_meta($table_id) : [];
-        $table_css = isset($table_meta['_complex_tables_custom_css'][0]) ? $table_meta['_complex_tables_custom_css'][0] : '';
+        $table_meta = $table_id ? get_post_meta( $table_id ) : [];
+        $table_css = isset( $table_meta[ '_complex_tables_custom_css' ][ 0 ] ) ? $table_meta[ '_complex_tables_custom_css' ][ 0 ] : '';
 
         echo '<div class="wrap">';
         echo '<h1>Create/Edit Table</h1>';
 
         echo '<form id="complex_tables_form" method="post" action="" enctype="multipart/form-data">';
-        echo '<input type="hidden" name="table_id" value="' . esc_attr($table_id) . '">';
-        wp_nonce_field('complex_tables_create_edit', 'complex_tables_nonce');
+        echo '<input type="hidden" name="table_id" value="' . esc_attr( $table_id ) . '">';
+        wp_nonce_field( 'complex_tables_create_edit', 'complex_tables_nonce' );
 
         echo '<table class="form-table">';
         echo '<tbody>'
         ;
         echo '<tr>';
         echo '<th scope="row"><Label for="table_name">Table Name</label></th>';
-        echo '<td><input type="text" name="table_name" id="table_name" value="' . esc_attr($table_name) . '" class="regular-text"></td>';
+        echo '<td><input type="text" name="table_name" id="table_name" value="' . esc_attr( $table_name ) . '" class="regular-text"></td>';
         echo '</tr>';
 
         echo '<tr>';
         echo '<th scope="row"><Label for="table_data">Table Data (JSON)</label></th>';
-        echo '<td><textarea name="table_data" id="table_data" rows="10" class="large-text code">' . esc_textarea($table_data) . '</textarea></td>';
+        echo '<td><textarea name="table_data" id="table_data" rows="10" class="large-text code">' . esc_textarea( $table_data ) . '</textarea></td>';
         echo '</tr>';
 
         echo '<tr>';
@@ -320,12 +319,12 @@ class Admin_menu {
         
         echo '<tr>';
         echo '<th scope="row"><Label for="table_class">Table Class</label></th>';
-        echo '<td><input type="text" name="table_class" id="table_class" value="' . esc_attr(isset($table_meta['_complex_tables_class'][0]) ? $table_meta['_complex_tables_class'][0] : '') . '" class="regular-text"></td>';
+        echo '<td><input type="text" name="table_class" id="table_class" value="' . esc_attr( isset( $table_meta[ '_complex_tables_class' ][ 0 ] ) ? $table_meta[ '_complex_tables_class' ][ 0 ] : '' ) . '" class="regular-text"></td>';
         echo '</tr>';
         
         echo '<tr>';
         echo '<th scope="row"><Label for="table_css">Custom CSS</label></th>';
-        echo '<td><textarea name="table_css" id="table_css" rows="5" cols="60">' . esc_textarea($table_css) . '</textarea></td>';
+        echo '<td><textarea name="table_css" id="table_css" rows="5" cols="60">' . esc_textarea( $table_css ) . '</textarea></td>';
         echo '</tr>';
 
         echo '<tr>';

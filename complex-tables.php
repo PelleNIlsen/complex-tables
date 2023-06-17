@@ -23,10 +23,10 @@ include 'shortcode-handler.php';
  */
 function complex_tables_admin() {
     $admin_menu = new Admin_menu();
-    add_action( 'admin_menu', [$admin_menu, 'create_admin_menu'] );
+    add_action( 'admin_menu', [ $admin_menu, 'create_admin_menu' ] );
 
     $custom_post_type = new Custom_post_type();
-    add_action( 'init', [$custom_post_type, 'create_post_type'] );
+    add_action( 'init', [ $custom_post_type, 'create_post_type' ] );
 }
 add_action( 'plugins_loaded', 'complex_tables_admin' );
 
@@ -41,14 +41,14 @@ add_action( 'plugins_loaded', 'complex_tables_admin' );
  * 
  * @return void
  */
-function update_complex_table($table_id, $table_name, $table_data) {
+function update_complex_table( $table_id, $table_name, $table_data ) {
     $table_post = [
         'ID'            => $table_id,
         'post_title'    => $table_name,
         'post_content'  => $table_data,
     ];
 
-    wp_update_post($table_post);
+    wp_update_post( $table_post );
 }
 
 /**
@@ -61,7 +61,7 @@ function update_complex_table($table_id, $table_name, $table_data) {
  * 
  * @return int|WP_Error         The ID of the newly created post on success, or a WP_Error object on failure.
  */
-function create_new_complex_table($table_name, $table_data) {
+function create_new_complex_table( $table_name, $table_data ) {
     $table_post = [
         'post_title'    => $table_name,
         'post_content'  => $table_data,
@@ -69,7 +69,7 @@ function create_new_complex_table($table_name, $table_data) {
         'post_type'     => 'complex_table'
     ];
 
-    $table_id = wp_insert_post($table_post);
+    $table_id = wp_insert_post( $table_post );
     return $table_id;
 }
 
@@ -81,17 +81,17 @@ function create_new_complex_table($table_name, $table_data) {
  * @return void
  */
 function generate_table_html_callback() {
-    check_ajax_referer('generate_table_html', 'security');
+    check_ajax_referer( 'generate_table_html', 'security' );
 
-    if (isset($_POST['table_data'])) {
+    if ( isset( $_POST[ 'table_data' ] ) ) {
         $shortcode_handler = new Shortcode_Handler();
-        $table_data = stripslashes($_POST['table_data']);
-        echo $shortcode_handler->generate_table_html($table_data);
+        $table_data = stripslashes( $_POST[ 'table_data' ] );
+        echo $shortcode_handler->generate_table_html( $table_data );
     }
 
     wp_die();
 }
-add_action('wp_ajax_generate_table_html', 'generate_table_html_callback');
+add_action( 'wp_ajax_generate_table_html', 'generate_table_html_callback' );
  
 
 new Shortcode_Handler();
