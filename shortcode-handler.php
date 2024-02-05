@@ -73,7 +73,12 @@ class Shortcode_Handler {
         $output .= '<table class="complex-table ' . esc_attr( $table_class ) . '">';
         $output .= '<thead><tr>';
         foreach ( $headers as $header ) {
-            $output .= '<th>';
+            $isFirstCell = true;
+            if ($isFirstCell) {
+                $output .= '<th class="table-accordion">';
+            } else {
+                $output .= '<th>';
+            }
             $output .= esc_html( $header );
             $output .= '</th>';
         }
