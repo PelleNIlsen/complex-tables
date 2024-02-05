@@ -76,6 +76,7 @@ class Shortcode_Handler {
             $isFirstCell = true;
             if ($isFirstCell) {
                 $output .= '<th class="table-accordion">';
+                $isFirstCell = false;
             } else {
                 $output .= '<th>';
             }
