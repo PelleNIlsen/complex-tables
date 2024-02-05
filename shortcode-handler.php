@@ -77,9 +77,14 @@ class Shortcode_Handler {
         $output .= '</thead></tr><tbody>';
         foreach ( $json_data as $row ) {
             $output .= '<tr>';
+            $isFirstCell = true;
             foreach ( $row as $cell ) {
-                $output .= '<td>';
-                // $output .= esc_html( $cell );
+                if ($isFirstCell) {
+                    $output .= '<td class="table-accordion">';
+                    $isFirstCell = false;
+                } else {
+                    $output .= '<td class="table-cell">';
+                }
                 $output .= do_shortcode( $cell );
                 $output .= '</td>';
             }
