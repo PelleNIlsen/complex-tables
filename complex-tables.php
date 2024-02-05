@@ -3,7 +3,7 @@
  * Plugin Name: Complex Tables
  * Plugin URI: https://github.com/PelleNIlsen/complex-tables/blob/main/readme.md
  * Description: A plugin to create, store ,and display complex tables via shortcodes.
- * Version: 1.0.0
+ * Version: 2.0.1
  * Author: Pelle Nilsen
  * Author URI: https://github.com/PelleNIlsen
  * License: GPLv2 or later

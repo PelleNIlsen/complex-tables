@@ -79,7 +79,8 @@ class Shortcode_Handler {
             $output .= '<tr>';
             foreach ( $row as $cell ) {
                 $output .= '<td>';
-                $output .= esc_html( $cell );
+                // $output .= esc_html( $cell );
+                $output .= do_shortcode( $cell );
                 $output .= '</td>';
             }
             $output .= '</tr>';
