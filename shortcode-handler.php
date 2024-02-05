@@ -72,8 +72,8 @@ class Shortcode_Handler {
         $output .= '<div style="' . $scrollableDivCss . '">';
         $output .= '<table class="complex-table ' . esc_attr( $table_class ) . '">';
         $output .= '<thead><tr>';
+        $isFirstCell = true;
         foreach ( $headers as $header ) {
-            $isFirstCell = true;
             if ($isFirstCell) {
                 $output .= '<th class="table-accordion">';
                 $isFirstCell = false;
