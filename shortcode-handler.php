@@ -66,7 +66,10 @@ class Shortcode_Handler {
 
         $table_css = preg_replace( '/<.*?>|<|>/', '', $table_css );
 
+        $scrollableDivCss = 'overflow-x: auto; -webkit-overflow-scrolling: touch;';
+
         $output = '<style scoped>' . $table_css . '</style>';
+        $output .= '<div style="' . $scrollableDivCss . '">';
         $output .= '<table class="complex-table ' . esc_attr( $table_class ) . '">';
         $output .= '<thead><tr>';
         foreach ( $headers as $header ) {
@@ -91,6 +94,7 @@ class Shortcode_Handler {
             $output .= '</tr>';
         }
         $output .= '</tbody></table>';
+        $output .= '</div>';
 
         return $output;
     }
